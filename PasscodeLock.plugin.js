@@ -217,9 +217,16 @@ const Locale = new class {
     return dict
   }
 
-  getCurrentLocale () {
-    return (LanguageStore.getLocale() || LanguageStore.chosenLocale || LanguageStore._chosenLocale || 'en').replace('en-US', 'en').replace('en-GB', 'en')
+getCurrentLocale () {
+  let locale = 'en';  // Hard default to prevent undefined
+
+  if (LanguageStore) {
+    locale = LanguageStore.getLocale?.() || LanguageStore.chosenLocale || LanguageStore._chosenLocale || 'en';
   }
+
+  // Ensure it's a string before replacing
+  return String(locale).replace('en-US', 'en').replace('en-GB', 'en');
+}
 
   get current () {
     return this.lang[this.getCurrentLocale()] ?? this.lang['en']
